@@ -15,7 +15,10 @@ $reponses = [
 	"thaï",
 ];
 $resultat = "";
+$success = 'started';
 
+//Récupérer les données sauvegardées (URL, form POST, Cookie, Session, fichier, base de données, serveur)
+/*
 if(!empty($_GET['nroQuestion'])) {
 	$nroQuestion = $_GET['nroQuestion'];
 } elseif(!empty($_POST['nroQuestion'])) {
@@ -23,11 +26,11 @@ if(!empty($_GET['nroQuestion'])) {
 } else {
 	$nroQuestion = 0;
 }
-//var_dump($nroQuestion);
+*/
+$nroQuestion = $_SESSION["nroQuestion"] ?? 0;	//Récupération du nro de question
+var_dump($nroQuestion);
 
-$success = 'started';
-
-$score = $_POST['score'] ?? $_GET['score'] ?? 0; // Récupération du score
+$score = $_SESSION['score'] ?? 0; // Récupération du score
 var_dump($score);
 
 //Traitement des commandes
@@ -38,6 +41,8 @@ if(isset($_POST['btSend'])) {
 		//var_dump($reponses[$nroQuestion]);
 		if(strtolower(trim($_POST['reponse']))==$reponses[$nroQuestion]) {
 			$nroQuestion++;
+			$_SESSION["nroQuestion"] = $nroQuestion;
+
             $score += 2; // Ajouter 2 points
 			
 			if($nroQuestion<sizeof($questions)) {
@@ -53,6 +58,9 @@ if(isset($_POST['btSend'])) {
 			
 			$resultat = "Dommage...";
 		}
+
+		//Sauver le score dans la session
+		$_SESSION["score"] = $score;
 	} else {	//var_dump('PAS OK');
 		$resultat = "Veuillez fournir une réponse.";
 	}
@@ -69,8 +77,6 @@ if(isset($_POST['btSend'])) {
 			<fieldset>
 				<label for="reponse">Réponse: </label>
 				<input type="text" name="reponse" id="reponse" required>
-				<input type="hidden" name="nroQuestion" id="nroQuestion" value="<?= $nroQuestion ?>">
-				<input type="hidden" name="score" id="score" value="<?= $score ?>">
 			</fieldset>
 			<button name="btSend">Envoyer</button>
 	</form>
@@ -81,7 +87,7 @@ if(isset($_POST['btSend'])) {
 			<?= $resultat ?>
 		
 		<?php if($success=='good') { ?>
-			<a href="?nroQuestion=<?= $nroQuestion ?>&score=<?= $score ?>">Question suivante</a>
+			<a href="<?= $_SERVER["PHP_SELF"] ?>">Question suivante</a>
 		<?php } ?>
 		</p>
 
