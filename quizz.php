@@ -3,17 +3,27 @@ session_start();
 
 //Sécurisation (Authorization)
 
-//Déclaration des variables, constantes et fonctions
-$questions = [
-	"Quel est la couleur du cheval blanc de Napoléon?",
-	"Quel est votre jour préféré?",
-	"Quel est votre cusine préférée?",
-];
-$reponses = [
-	"blanc",
-	"vendredi",
-	"thaï",
-];
+//=== Déclaration des variables, constantes et fonctions
+//Charger les données depuis les fichiers
+$questions = file("data/questions.csv");
+$reponses = file("data/reponses.csv");
+//Retirer la première ligne (qui contient le nom des champs)
+array_shift($questions);
+array_shift($reponses);
+
+//Nettoyage des valeurs du tableau (enlever le caractère Enter \n à la fin)
+foreach($questions as &$question) {
+	$question = trim($question);
+}
+
+foreach($reponses as &$reponse) {
+	$reponse = trim($reponse);
+}
+
+//var_dump($questions);
+//var_dump($reponses);
+//die;
+
 $resultat = "";
 $success = 'started';
 
