@@ -1,6 +1,21 @@
 <?php
 session_start();    //Démarrer ou reprendre une session
 
+if(isset($_GET["logout"])) {
+    //Déconnexion
+    unset($_SESSION["login"]);
+
+    session_destroy();  //Supprimer le fichier de session (facultatif)
+
+    //Redirection
+    /*
+    header("Status: 302 Temporary");
+    header("Location: quizz.php");
+    */
+
+    header("Location: quizz.php", null, 302);
+}
+
 var_dump($_POST);
 
 $message = "";
@@ -12,7 +27,7 @@ if(isset($_POST["btLogin"])) {
             $_SESSION["login"] = $_POST["login"];
 
             //Rediriger vers le quizz
-            header("Location: quizz4.php", false, 302);
+            header("Location: quizz.php", false, 302);
             exit();
         } else {
             $message = "Identifiants incorrects!";

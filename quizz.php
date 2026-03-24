@@ -28,6 +28,7 @@ if(!empty($_GET['nroQuestion'])) {
 $success = 'started';
 
 $score = $_POST['score'] ?? $_GET['score'] ?? 0; // Récupération du score
+var_dump($score);
 
 //Traitement des commandes
 if(isset($_POST['btSend'])) {
@@ -57,42 +58,38 @@ if(isset($_POST['btSend'])) {
 	}
 }
 ?>
-<!doctype html>
-<html lang="fr">
-<head>
-<meta charset="utf-8">
-<title>Quizz</title>
-</head>
-<body>
-<p style="float:right;margin-right:100px"><?= $_SESSION["login"] ?></p>
-<h1>Quizz</h1>
 
+<?php include("includes/header.php"); ?>
+
+<main>
 <?php if(!in_array($success,['good','finished'])) { ?>
 	<p><?= $questions[$nroQuestion] ?></p>
 
-	<form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-		<fieldset>
-			<label for="reponse">Réponse: </label>
-			<input type="text" name="reponse" id="reponse" required>
-			<input type="hidden" name="nroQuestion" id="nroQuestion" value="<?= $nroQuestion ?>">
-		</fieldset>
-		<button name="btSend">Envoyer</button>
+		<form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
+			<fieldset>
+				<label for="reponse">Réponse: </label>
+				<input type="text" name="reponse" id="reponse" required>
+				<input type="hidden" name="nroQuestion" id="nroQuestion" value="<?= $nroQuestion ?>">
+				<input type="hidden" name="score" id="score" value="<?= $score ?>">
+			</fieldset>
+			<button name="btSend">Envoyer</button>
 	</form>
 <?php } ?>
 
-<div id="resultat">
-	<p>
-		<?= $resultat ?>
-	
-	<?php if($success=='good') { ?>
-		<a href="<?= $_SERVER['PHP_SELF'] ?>?nroQuestion=<?= $nroQuestion ?>">Question suivante</a>
-	<?php } ?>
-	</p>
+	<div id="resultat">
+		<p>
+			<?= $resultat ?>
+		
+		<?php if($success=='good') { ?>
+			<a href="?nroQuestion=<?= $nroQuestion ?>&score=<?= $score ?>">Question suivante</a>
+		<?php } ?>
+		</p>
 
-    <!-- Affichage du score -->
-<?php if($success=='finished') { ?>	
-    <p>Score final : <?= $score ?> points</p> 
-<?php } ?>
-</div>
-</body>
-</html>
+		<!-- Affichage du score -->
+	<?php if($success=='finished') { ?>	
+		<p>Score final : <?= $score ?> points</p> 
+	<?php } ?>
+	</div>
+</main>
+
+<?php include("includes/footer.php"); ?>
